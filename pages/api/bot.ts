@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Markup, Telegraf } from "telegraf";
+import { PrismaClient } from '@prisma/client'
 
 const bot = new Telegraf(process.env.NEXT_TELEGRAM_TOKEN as string);
+const prisma = new PrismaClient()
 
 /**
  * hears method is used to listen to a specific text
@@ -20,6 +22,26 @@ bot.hears("money", async (ctx) => {
       Markup.button.callback("No", "no"),
     ])
   );
+});
+
+bot.command("start", async (ctx) => {
+  // base on the text, we can send a message reply.
+  await ctx.telegram.sendMessage(ctx.message.chat.id, `Halo`);
+  // We can send multiple messages
+  // Even some with custo markup
+  console.log(ctx)
+  // create or get User
+  let user_data = ctx.message.from;
+  const user = await prisma.user.create({
+    data: {
+      username: user_data.first_name,
+      tg_id: user_data.id,
+      is_bot: user_data.is_bot,
+      first_name: user_data.first_name,
+      language_code: user_data.language_code,
+    },
+  })
+  console.log(user);
 });
 
 bot.action("yes", async (ctx) => {
