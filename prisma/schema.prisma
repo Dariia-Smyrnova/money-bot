@@ -11,10 +11,23 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  username  String @unique
-  tg_id Int?
-  is_bot Boolean?
-  first_name String?
+  id            Int       @id 
+  username      String    @unique
+  is_bot        Boolean?
+  first_name    String?
   language_code String?
+  Expense       Expense[]
+  currency String? @default("USD")
+}
+
+model Expense {
+  id       Int     @id @default(autoincrement())
+  user     User    @relation(fields: [userId], references: [id])
+  amount   Float
+  currency String? @default("USD")
+  category String
+  comment  String?
+  userId   Int
+  added DateTime @default(now())
+  updated DateTime @updatedAt
 }
