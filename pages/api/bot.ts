@@ -4,7 +4,7 @@ import { PrismaClient, Expense } from '@prisma/client'
 
 const bot = new Telegraf(process.env.NEXT_TELEGRAM_TOKEN as string);
 const prisma = new PrismaClient()
-const telegram = new Telegram(process.env.NEXT_TELEGRAM_TOKEN);
+const telegram = new Telegram(process.env.NEXT_TELEGRAM_TOKEN as string);
 
 telegram.setMyCommands(
   [
