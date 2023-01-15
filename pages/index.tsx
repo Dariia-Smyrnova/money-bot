@@ -19,7 +19,7 @@ export default function Home() {
       <main>
         <div>
           <h1 className={styles.title}>
-            Where's my Money Beach Bot. 
+            Where{"'"}s my Money Beach Bot. 
           </h1>
         </div>
         <div>
