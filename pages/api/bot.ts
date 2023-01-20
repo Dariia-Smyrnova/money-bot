@@ -60,6 +60,13 @@ bot.command("spent", async (ctx) => {
   let category = splitted[1];
   let amount = parseFloat(splitted[2]);
   let currency = splitted[3];
+  console.log({
+    "#": "#".repeat(60),
+    splitted, 
+    category,
+    amount,
+    currency
+  })
   
   let expense: Expense = await prisma.expense.create({
     data: {
