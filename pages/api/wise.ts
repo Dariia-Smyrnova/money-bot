@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient, History } from '@prisma/client'
+const prisma = new PrismaClient()
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // body: {
@@ -17,6 +19,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const current_state = req.body.data.current_state;
     const occurred_at = req.body.data.occurred_at;
     const event_type = req.body.event_type;
-    console.log(`${event_type}: ${current_state} ${occurred_at}`);
+    prisma.history.create(
+      {data: {
+        event: `${event_type}: ${current_state} ${occurred_at} data: ${req.body.data}`
+      }}
+    )
     return res.status(200).json({ text: 'Hello' });
 }
