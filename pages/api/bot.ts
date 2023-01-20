@@ -57,13 +57,16 @@ bot.command("start", async (ctx) => {
 bot.command("spent", async (ctx) => {
   const expense_str = ctx.update.message.text;
   let splitted = expense_str.split(" ", 10);
-  let amount = parseFloat(splitted[1]);
-  let currency = splitted[2];
-  let category = splitted[3];
-
-  let expense = await prisma.expense.create({
+  let category = splitted[1];
+  let amount = parseFloat(splitted[2]);
+  let currency = splitted[3];
+  
+  let expense: Expense = await prisma.expense.create({
     data: {
-      userId: ctx.message.from.id,
+      user: {
+        connect: {
+          id: ctx.message.from.id,
+      }},
       amount: amount,
       currency: currency,
       category: category,
@@ -83,9 +86,12 @@ bot.command("list", async (ctx) => {
       added: 'desc',
     },
   })
-  ctx.replyWithMarkdownV2(`
-  \\#\\# Money
-  ${all_expenses.map((e: Expense) => `${e.added.toDateString()} ${e.category} ${e.amount} ${e.currency?.toUpperCase()}`).join("\n")}`)
+  let str = ['*All expenses:*']
+  for (const cat of all_expenses) {
+    str.push(`*${cat.category}:* ${cat.amount}`)
+  }
+
+  ctx.replyWithMarkdownV2(str.join('\n'))
 })
 
 bot.command("all", async (ctx) => {
@@ -131,7 +137,7 @@ monthAgo.setHours(0, 0, 0, 0);
   })
   
   console.log(JSON.stringify(byCategory))
-  let str = ['*Spent by category*']
+  let str = ['*Spent this month by category:*']
   for (const cat of byCategory) {
     str.push(`*${cat.category}:* ${cat._sum.amount}`)
   }

@@ -6,30 +6,29 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-
 model User {
-  id            Int       @id 
+  id            Int       @id
   username      String    @unique
   is_bot        Boolean?
   first_name    String?
   language_code String?
   Expense       Expense[]
-  currency String? @default("USD")
+  currency      String?   @default("USD")
 }
 
 model Expense {
-  id       Int     @id @default(autoincrement())
-  user     User    @relation(fields: [userId], references: [id])
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
   amount   Float
-  currency String? @default("USD")
+  currency String?  @default("USD")
   category String
   comment  String?
   userId   Int
-  added DateTime @default(now())
-  updated DateTime @updatedAt
+  added    DateTime @default(now())
+  updated  DateTime @updatedAt
 }
